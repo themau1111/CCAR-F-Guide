@@ -161,8 +161,9 @@ body { background: radial-gradient(circle at top left, #eeeaff 0, transparent 33
   .sidebar-heading h2 { color: #fff; }
   .domain-link { color: #dad5f5; }
   .domain-link:hover { color: #fff; background: rgba(255,255,255,.1); }
-  .domain-link.active { color: #332654; background: linear-gradient(105deg, #ffe69a, #ffc580); box-shadow: 0 6px 14px rgba(11, 7, 40, .2); }
-  .domain-link.active .domain-number, .domain-link.active .domain-name small { color: #514267; }
+  .domain-link.active { color: #fff; background: linear-gradient(105deg, #62568e, #7669a7); box-shadow: 0 6px 14px rgba(11, 7, 40, .2); }
+  .domain-link.active .domain-number, .domain-link.active .domain-name small { color: #ddd6fb; }
+  .domain-link.active .mini-progress i { background: #ded8ff; }
   .domain-number { color: #b8afe2; }
   .domain-name small { color: #bbb4dc; }
   .mini-progress { background: rgba(255,255,255,.19); }
