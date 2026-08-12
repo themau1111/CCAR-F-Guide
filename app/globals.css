@@ -181,3 +181,57 @@ body { background: radial-gradient(circle at top left, #eeeaff 0, transparent 33
   .compact-warning { color: #fff0c5; border-left-color: #ffd56e; background: rgba(133, 80, 25, .34); }
   .sidebar-card { color: #3c2b50; border: 1px solid rgba(255,222,139,.52); box-shadow: none; }
 }
+
+/* Consistency pass: one indigo system, with gold reserved for progress and priority. */
+:root { --ink: #29234d; --muted: #5c5878; --line: #d4ccec; --paper: #f7f6fc; --violet: #5f46d2; --dark-leaf: #29214f; }
+body { background: #f7f6fc; }
+.brand-mark, .button-dark { background: #5f46d2; }
+.button-dark:hover { background: #4e37bb; }
+.button-secondary { color: #40318e; background: #ece8ff; }
+.text-button { color: #4d39af; }
+.text-button:hover { color: #342779; }
+
+.section-heading, .practice-heading, .setup-section .section-heading { border-color: #4d3b9b; background: linear-gradient(112deg, #29214f 0%, #3d2d77 100%); }
+.section-heading::after { border-color: rgba(154, 136, 255, .22); }
+.section-heading .eyebrow, .practice-heading .eyebrow { color: #ffe08a; }
+.section-heading .section-count, .section-heading .domain-pill, .section-heading .exam-badge { color: #342653; background: #ffe49b; }
+.results-hero { background: linear-gradient(112deg, #29214f 0%, #3d2d77 100%); }
+
+.study-card, .study-card:nth-child(3n + 1), .study-card:nth-child(3n + 2), .study-card:nth-child(3n) { background: #fff; }
+.study-card { border-color: #c8bee8; }
+.study-card::after { border-color: #9d8ee0; }
+.card-summary, .key-points { color: #514d6d; }
+.exam-tip { color: #403b60; border-left-color: #6248d6; background: #f0edff; }
+.exam-tip span { color: #5f46d2; }
+.key-points li::before { background: #5f46d2; }
+
+.review-section { border-top-color: #c6bce8; }
+.game-picker { border-color: #c7bce9; background: #f0edff; box-shadow: none; }
+.game-picker button { min-height: 76px; border-color: #c4b9e7; color: #393359; background: #fff; font-size: 12px; font-weight: 700; line-height: 1.1; }
+.game-picker button > span { color: #5f46d2; font-size: 19px; }
+.game-picker button strong { color: inherit; font-size: 11px; }
+.game-picker button em { top: 6px; right: 6px; padding: 2px 4px; border-radius: 99px; color: #fff; background: #7352c5; font-size: 8px; font-weight: 700; line-height: 1; }
+.game-picker button.recommended { border-color: #a99ae5; background: #eae5ff; }
+.game-picker button.active { color: #fff !important; border-color: #4b35b8; background: #5f46d2 !important; box-shadow: 0 7px 15px rgba(60, 43, 148, .3); }
+.game-picker button.active > span { color: #ffe08a !important; }
+.game-picker button.active strong { color: #fff !important; }
+.game-picker button.active em { color: #342653 !important; background: #ffe08a; }
+.practice-stage .game-card { border-color: #c8bee8; background: #fff; box-shadow: 0 12px 26px rgba(49, 37, 108, .1); }
+.game-heading h3, .question-round h3, .binary-game h3, .fill-game h3 { color: #2e274f; }
+.game-heading p, .game-instruction { color: #514d6d; font-weight: 500; }
+.game-icon, .game-icon.coral, .game-icon.yellow, .game-icon.game-connections, .game-icon.game-rapid, .game-icon.game-truefalse, .game-icon.game-memory, .game-icon.game-sort, .game-icon.game-fillblank, .game-icon.game-antipattern { color: #5f46d2; background: #ece8ff; }
+.flashcard-front { color: #2e274f; background: #f1eeff; }
+.flashcard-front em { color: #514a79; font-weight: 600; opacity: 1; }
+.flashcard-back { background: linear-gradient(132deg, #332566, #5f46d2); }
+.match-button, .round-options button, .fill-options button, .binary-game > div > button { color: #393359; border-color: #cbc2e8; background: #fff; }
+.memory-board button { color: #493aa5; border-color: #c9c0e8; background: #f5f3ff; }
+
+.exam-setup-grid .setup-panel, .question-card, .domain-result { border-color: #c8bee8; }
+.segmented-control { background: #ebe7ff; }
+.segmented-control button.active { background: #5f46d2; }
+.exam-progress span { background: #5f46d2; }
+
+@media (max-width: 720px) {
+  .game-picker button { min-height: 70px; font-size: 11px; }
+  .game-picker button strong { font-size: 10px; }
+}
