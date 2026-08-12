@@ -35,9 +35,9 @@ function shuffled<T>(items: T[]) {
 
 export function MockExam({ onExamComplete }: MockExamProps) {
   const [selectedDomains, setSelectedDomains] = useState<DomainId[]>(domains.map((domain) => domain.id));
-  const [questionCount, setQuestionCount] = useState(10);
+  const [questionCount, setQuestionCount] = useState(20);
   const [timed, setTimed] = useState(true);
-  const [duration, setDuration] = useState(45);
+  const [duration, setDuration] = useState(120);
   const [session, setSession] = useState<ExamSession | null>(null);
   const [remaining, setRemaining] = useState(0);
   const [result, setResult] = useState<ExamResult | null>(null);
@@ -153,7 +153,7 @@ export function MockExam({ onExamComplete }: MockExamProps) {
             <h2 id="exam-title">Simulacro a tu medida</h2>
             <p>Responde sin pistas, marca dudas y recibe una revisión razonada al final.</p>
           </div>
-          <span className="exam-badge">{questions.length} preguntas disponibles</span>
+          <span className="exam-badge">Hasta 60 preguntas · 120 min</span>
         </div>
         <div className="exam-setup-grid">
           <div className="setup-panel">
@@ -171,11 +171,11 @@ export function MockExam({ onExamComplete }: MockExamProps) {
             <fieldset>
               <legend>2. Número de preguntas</legend>
               <div className="segmented-control">
-                {[5, 10, 15, 20].map((count) => (
+                {[10, 20, 30, 45, 60].map((count) => (
                   <button className={questionCount === count ? "active" : ""} key={count} onClick={() => setQuestionCount(count)} type="button">{count}</button>
                 ))}
               </div>
-              <p className="setup-help">Este filtro contiene {availableQuestions.length}; comenzarás con {actualCount} preguntas.</p>
+              <p className="setup-help">Este filtro contiene {availableQuestions.length}; comenzarás con {actualCount} preguntas. 60 es el máximo de un simulacro, no una obligación.</p>
             </fieldset>
           </div>
           <div className="setup-panel timing-panel">
@@ -185,7 +185,7 @@ export function MockExam({ onExamComplete }: MockExamProps) {
                 <span><strong>{timed ? "Activado" : "Desactivado"}</strong><small>{timed ? "El examen se entrega al terminar el tiempo." : "Sin presión: tú decides cuándo finalizar."}</small></span>
                 <input checked={timed} onChange={(event) => setTimed(event.target.checked)} type="checkbox" role="switch" />
               </label>
-              {timed && <label className="duration-control">Duración <strong>{duration} min</strong><input max="120" min="10" onChange={(event) => setDuration(Number(event.target.value))} step="5" type="range" value={duration} /></label>}
+              {timed && <label className="duration-control">Duración <strong>{duration} min</strong><input max="120" min="10" onChange={(event) => setDuration(Number(event.target.value))} step="5" type="range" value={duration} /><span>Máximo 120 min</span></label>}
             </fieldset>
             <div className="exam-ready-note"><span aria-hidden="true">⌁</span><p>Las preguntas se mezclan en cada intento y no muestran la solución hasta finalizar.</p></div>
             <button className="button button-dark start-exam" disabled={availableQuestions.length === 0} onClick={startExam} type="button">Comenzar simulacro <span aria-hidden="true">→</span></button>

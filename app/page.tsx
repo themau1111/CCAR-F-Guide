@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MockExam } from "@/src/components/MockExam";
 import { ReviewArena } from "@/src/components/ReviewArena";
 import { StudyDeck } from "@/src/components/StudyDeck";
 import { CoverageMap } from "@/src/components/CoverageMap";
 import { domains, sourceRepository, studyCards, type DomainId } from "@/src/lib/content";
 
-type Tab = "study" | "review" | "exam";
+type Tab = "learn" | "exam";
 
 type Progress = {
   completed: string[];
@@ -25,7 +25,7 @@ function toggleItem(items: string[], item: string) {
 }
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<Tab>("study");
+  const [activeTab, setActiveTab] = useState<Tab>("learn");
   const [activeDomain, setActiveDomain] = useState<DomainId>("agents");
   const [progress, setProgress] = useState<Progress>(emptyProgress);
   const [ready, setReady] = useState(false);
@@ -46,8 +46,6 @@ export default function Home() {
   }, [progress, ready]);
 
   const completion = Math.round((progress.completed.length / studyCards.length) * 100);
-  const activeDomainData = useMemo(() => domains.find((domain) => domain.id === activeDomain)!, [activeDomain]);
-
   const toggleCompleted = useCallback((cardId: string) => {
     setProgress((current) => ({ ...current, completed: toggleItem(current.completed, cardId) }));
   }, []);
@@ -66,54 +64,28 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="site-shell">
+    <main className="site-shell" id="top">
       <header className="site-header">
         <a className="brand" href="#top" aria-label="Inicio de Claude Architect Study Lab">
           <span className="brand-mark">C</span>
           <span>Architect<br /><strong>Study Lab</strong></span>
         </a>
         <nav className="top-nav" aria-label="Secciones principales">
-          <button className={activeTab === "study" ? "active" : ""} onClick={() => setActiveTab("study")} type="button">Estudiar</button>
-          <button className={activeTab === "review" ? "active" : ""} onClick={() => setActiveTab("review")} type="button">Repasar</button>
+          <button className={activeTab === "learn" ? "active" : ""} onClick={() => setActiveTab("learn")} type="button">Dominios</button>
           <button className={activeTab === "exam" ? "active" : ""} onClick={() => setActiveTab("exam")} type="button">Simulacros</button>
         </nav>
         <button className="header-action" onClick={() => setActiveTab("exam")} type="button">Ir al simulacro <span aria-hidden="true">↗</span></button>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-copy">
-          <p className="eyebrow violet">CLAUDE CERTIFIED ARCHITECT — FOUNDATIONS</p>
-          <h1>Estudia con intención.<br /><em>Responde con confianza.</em></h1>
-          <p className="hero-summary">Una guía visual y práctica para convertir conocimiento técnico en decisiones de arquitectura claras.</p>
-          <div className="hero-actions">
-            <button className="button button-light" onClick={() => setActiveTab("study")} type="button">Continuar estudiando <span aria-hidden="true">→</span></button>
-            <button className="text-button light" onClick={() => setActiveTab("review")} type="button">Probar un juego <span aria-hidden="true">↘</span></button>
-          </div>
-        </div>
-        <div className="hero-visual" aria-hidden="true">
-          <div className="orbit orbit-one" /><div className="orbit orbit-two" />
-          <div className="hero-card hero-card-main"><span>✦</span><strong>5</strong><small>dominios clave</small></div>
-          <div className="hero-card hero-card-side"><span>↗</span><strong>{progress.bestScore ?? "—"}{progress.bestScore !== null && "%"}</strong><small>mejor resultado</small></div>
-          <div className="spark spark-one">✦</div><div className="spark spark-two">✦</div>
-        </div>
-      </section>
-
-      <section className="progress-strip" aria-label="Tu progreso">
-        <div><span className="progress-title">Tu progreso</span><strong>{ready ? `${completion}%` : "…"}</strong></div>
-        <div className="progress-track"><span style={{ width: `${completion}%` }} /></div>
-        <p>{progress.completed.length} de {studyCards.length} conceptos trabajados</p>
-        <span className="progress-message">{completion === 100 ? "¡Ruta completada! Repasa los puntos débiles." : "Un paso más y lo tienes."}</span>
-      </section>
-
       <div className="workspace">
         <aside className="domain-sidebar">
-          <div className="sidebar-heading"><p className="eyebrow">RUTA DE ESTUDIO</p><h2>Los 5 dominios</h2></div>
+          <div className="sidebar-heading"><p className="eyebrow">RUTA DE ESTUDIO</p><h2>Dominios de examen</h2></div>
           <div className="domain-list">
             {domains.map((domain, index) => {
               const cardsInDomain = studyCards.filter((card) => card.domain === domain.id);
               const completeInDomain = cardsInDomain.filter((card) => progress.completed.includes(card.id)).length;
               return (
-                <button className={`domain-link ${activeDomain === domain.id ? "active" : ""}`} key={domain.id} onClick={() => { setActiveDomain(domain.id); if (activeTab === "exam") setActiveTab("study"); }} type="button">
+                <button className={`domain-link ${activeDomain === domain.id ? "active" : ""}`} key={domain.id} onClick={() => { setActiveDomain(domain.id); setActiveTab("learn"); }} type="button">
                   <span className="domain-number">0{index + 1}</span>
                   <span className="domain-name"><strong>{domain.shortName}</strong><small>{domain.weight}% del examen</small></span>
                   <span className="mini-progress"><i style={{ width: `${(completeInDomain / cardsInDomain.length) * 100}%` }} /></span>
@@ -121,12 +93,13 @@ export default function Home() {
               );
             })}
           </div>
-          <div className="sidebar-card"><span aria-hidden="true">⌁</span><p><strong>Consejo:</strong> prioriza Agentes: es el dominio con mayor peso.</p></div>
+          <div className="sidebar-progress" aria-label="Tu progreso"><div><span>Progreso</span><strong>{ready ? `${completion}%` : "…"}</strong></div><div className="progress-track"><span style={{ width: `${completion}%` }} /></div><p>{progress.completed.length}/{studyCards.length} conceptos trabajados</p></div>
+          <CoverageMap compact />
+          <div className="sidebar-card"><span aria-hidden="true">⌁</span><p><strong>Prioridad:</strong> Agentes representa el 27% del examen.</p></div>
         </aside>
 
         <div className="content-area">
-          {activeTab === "study" && <><CoverageMap /><StudyDeck activeDomain={activeDomain} completed={progress.completed} onToggleCompleted={toggleCompleted} /></>}
-          {activeTab === "review" && <ReviewArena activeDomain={activeDomain} mastered={progress.mastered} onToggleMastered={toggleMastered} />}
+          {activeTab === "learn" && <><StudyDeck activeDomain={activeDomain} completed={progress.completed} onToggleCompleted={toggleCompleted} /><ReviewArena activeDomain={activeDomain} mastered={progress.mastered} onToggleMastered={toggleMastered} /></>}
           {activeTab === "exam" && <MockExam onExamComplete={recordExam} />}
         </div>
       </div>

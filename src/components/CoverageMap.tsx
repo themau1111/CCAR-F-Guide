@@ -1,6 +1,19 @@
 import { domains, examCoverage, examScenarios } from "@/src/lib/content";
 
-export function CoverageMap() {
+export function CoverageMap({ compact = false }: { compact?: boolean }) {
+  if (compact) {
+    return (
+      <details className="coverage-map-compact">
+        <summary><span aria-hidden="true">◎</span><span><strong>Mapa de cobertura</strong><small>5 dominios · 8 escenarios</small></span><b aria-hidden="true">⌄</b></summary>
+        <div className="compact-coverage-body">
+          <p>Todo el temario público de la guía está mapeado en la app.</p>
+          <ul>{examCoverage.map((area) => <li key={area.domain}><strong>{area.title}</strong><span>{area.topics.length} bloques</span></li>)}</ul>
+          <p className="compact-warning"><strong>Escenario 8:</strong> área reportada sin temario público verificable.</p>
+        </div>
+      </details>
+    );
+  }
+
   return (
     <section className="coverage-map" aria-labelledby="coverage-title">
       <div className="coverage-intro">

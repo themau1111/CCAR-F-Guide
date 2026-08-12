@@ -42,6 +42,16 @@ export type ExamScenario = {
   note: string;
 };
 
+export type GameId = "flashcards" | "connections" | "ordering" | "rapid" | "truefalse" | "fillblank" | "decision" | "memory" | "sort" | "antipattern";
+
+export type GameFormat = {
+  id: GameId;
+  label: string;
+  shortLabel: string;
+  icon: string;
+  description: string;
+};
+
 export const domains: Domain[] = [
   {
     id: "agents",
@@ -474,11 +484,79 @@ export const examScenarios: ExamScenario[] = [
   { number: 8, title: "Herramientas de IA agéntica", coverage: "Área reportada", note: "La guía fuente declara que no hay contenido público verificable; se cubren principios generales, sin afirmar cobertura oficial." },
 ];
 
+export const gameFormats: GameFormat[] = [
+  { id: "flashcards", label: "Flashcards", shortLabel: "Voltea", icon: "◫", description: "Recupera el concepto antes de revelar." },
+  { id: "connections", label: "Conecta conceptos", shortLabel: "Une", icon: "⌁", description: "Forma pares y visualiza las conexiones." },
+  { id: "ordering", label: "Ordena el flujo", shortLabel: "Ordena", icon: "↕", description: "Arrastra pasos hasta formar un proceso válido." },
+  { id: "rapid", label: "Ráfaga", shortLabel: "Rápido", icon: "ϟ", description: "Responde una cadena corta de preguntas." },
+  { id: "truefalse", label: "Verdadero o falso", shortLabel: "V/F", icon: "±", description: "Distingue reglas reales de trampas frecuentes." },
+  { id: "fillblank", label: "Completa la idea", shortLabel: "Completa", icon: "…", description: "Encuentra el término que completa una regla." },
+  { id: "decision", label: "Caso y decisión", shortLabel: "Decide", icon: "◇", description: "Elige una respuesta bajo condiciones de arquitectura." },
+  { id: "memory", label: "Memoria", shortLabel: "Memoria", icon: "◌", description: "Encuentra parejas sin perder de vista el significado." },
+  { id: "sort", label: "Clasifica", shortLabel: "Clasifica", icon: "⇄", description: "Separa patrones de antipatrones." },
+  { id: "antipattern", label: "Caza-antipatrones", shortLabel: "Detecta", icon: "⚑", description: "Identifica por qué una solución falla en producción." },
+];
+
+export const recommendedGames: Record<DomainId, GameId[]> = {
+  agents: ["flashcards", "ordering", "decision"],
+  tools: ["connections", "sort", "antipattern"],
+  code: ["fillblank", "rapid", "memory"],
+  prompts: ["truefalse", "decision", "flashcards"],
+  context: ["connections", "ordering", "rapid"],
+};
+
+export const matchPairsByDomain: Record<DomainId, { left: string; right: string }[]> = {
+  agents: [
+    { left: "end_turn", right: "Señal fiable para cerrar el ciclo" },
+    { left: "Task", right: "Genera un subagente desde el coordinador" },
+    { left: "PreToolUse", right: "Bloquea una acción antes de ejecutarla" },
+    { left: "fork_session", right: "Bifurca una investigación desde una base común" },
+    { left: "allowed_tools", right: "Limita capacidades al rol del agente" },
+  ],
+  tools: [
+    { left: "Resource MCP", right: "Aporta contexto sin ejecutar una acción" },
+    { left: "tool_choice: any", right: "Exige al menos una llamada a herramienta" },
+    { left: "isError", right: "Señala un fallo de herramienta al agente" },
+    { left: "Grep", right: "Busca contenido dentro de archivos" },
+    { left: ".mcp.json", right: "Comparte configuración MCP del proyecto" },
+  ],
+  code: [
+    { left: "context: fork", right: "Aísla una skill en un subagente" },
+    { left: "paths", right: "Carga una regla solo para archivos coincidentes" },
+    { left: "@path", right: "Importa instrucciones externas en CLAUDE.md" },
+    { left: "--print", right: "Ejecuta Claude Code sin interacción en CI" },
+    { left: "/compact", right: "Condensa historial de una sesión extensa" },
+  ],
+  prompts: [
+    { left: "Few-shot", right: "Enseña la frontera entre casos ambiguos" },
+    { left: "nullable", right: "Representa un dato ausente sin inventarlo" },
+    { left: "custom_id", right: "Relaciona una respuesta Batch con su entrada" },
+    { left: "Retry con feedback", right: "Devuelve el error concreto para corregir" },
+    { left: "system", right: "Define comportamiento persistente de la solicitud" },
+  ],
+  context: [
+    { left: "Bloque de hechos", right: "Preserva IDs, fechas e importes exactos" },
+    { left: "Scratchpad", right: "Guarda hallazgos y pendientes recuperables" },
+    { left: "Handoff", right: "Entrega contexto accionable a una persona" },
+    { left: "Cobertura parcial", right: "Explicita las áreas sin evidencia suficiente" },
+    { left: "Provenance", right: "Conserva afirmación, fuente y fecha" },
+  ],
+};
+
+export const orderingChallenges: Record<DomainId, string[]> = {
+  agents: ["Enviar solicitud con las tools disponibles", "Revisar stop_reason en la respuesta", "Ejecutar la tool solicitada", "Agregar su resultado al historial", "Repetir hasta recibir end_turn"],
+  tools: ["Identificar el rol y la operación necesaria", "Diseñar una tool con contrato específico", "Definir entradas, salidas y casos límite", "Restringir la tool al agente que la necesita", "Devolver errores estructurados para recuperación"],
+  code: ["Explorar la base sin modificarla", "Proponer un plan para el cambio amplio", "Acordar el enfoque y las reglas aplicables", "Ejecutar cambios acotados", "Validar build, tipos y resultado"],
+  prompts: ["Definir tarea, evidencia y formato esperado", "Incluir ejemplos si el caso es ambiguo", "Obtener salida estructurada", "Validar forma y reglas semánticas", "Reintentar con feedback específico si falla"],
+  context: ["Extraer hechos críticos en un bloque estructurado", "Recortar resultados de tools al mínimo útil", "Conservar fuentes y fechas junto a afirmaciones", "Anotar fallos y cobertura parcial", "Crear un handoff si se requiere revisión humana"],
+};
+
 export const flashcards = studyCards.map((card) => ({
   id: card.id,
   domain: card.domain,
   front: card.title,
-  back: card.keyPoints.join(" "),
+  back: card.summary,
+  hint: card.examTip,
 }));
 
 const coreQuestions: Question[] = [
@@ -871,6 +949,159 @@ const expandedQuestions: Question[] = [
     options: ["Conservar ambos valores con fuente y fecha, y escalar la reconciliación", "Elegir la cifra más alta", "Promediar sin explicación", "Eliminar toda la sección"],
     correctIndex: 0,
     explanation: "La provenance mantiene la evidencia y el conflicto visible; el coordinador o una regla posterior puede decidir cómo reconciliarlo.",
+  },
+  {
+    id: "q-coordinator-coverage",
+    domain: "agents",
+    scenario: "Sistema de investigación multiagente",
+    prompt: "El coordinador divide “impacto de IA en industrias creativas” solo en arte digital, diseño y fotografía. ¿Cuál es la causa raíz de que falten música, literatura y cine?",
+    options: ["La descomposición inicial no cubrió el espacio del problema", "El modelo necesitaba más tokens", "Faltaba una secuencia de parada", "Las fuentes no tenían URLs"],
+    correctIndex: 0,
+    explanation: "Si los subagentes cumplieron lo asignado pero la síntesis omite áreas, la brecha se originó en la descomposición del coordinador.",
+  },
+  {
+    id: "q-local-recovery",
+    domain: "agents",
+    scenario: "Sistema de investigación multiagente",
+    prompt: "Un subagente sufre un timeout al cargar una fuente. ¿Qué manejo reduce mejor la carga del coordinador?",
+    options: ["Recuperar localmente fallos transitorios y escalar solo los no resolubles con contexto", "Terminar todo el workflow", "Devolver éxito vacío", "Hacer que otro subagente reemplace al coordinador"],
+    correctIndex: 0,
+    explanation: "Los fallos rutinarios deben resolverse en el nivel más bajo capaz de hacerlo; el coordinador recibe solo información relevante y estructurada.",
+  },
+  {
+    id: "q-resume-session",
+    domain: "agents",
+    scenario: "Investigación reanudada",
+    prompt: "¿Cuándo es preferible una sesión nueva con resumen estructurado frente a usar --resume?",
+    options: ["Cuando el estado de archivos o hallazgos cambió y el contexto anterior está desactualizado", "Cuando quieres conservar el contexto intacto", "Cuando hay una sola tool disponible", "Siempre que stop_reason sea end_turn"],
+    correctIndex: 0,
+    explanation: "Reanudar ayuda cuando el contexto sigue vigente. Con cambios materiales, un resumen actualizado es más confiable que una conversación antigua.",
+  },
+  {
+    id: "q-post-tool-use",
+    domain: "agents",
+    scenario: "Normalización de datos",
+    prompt: "Tools de terceros devuelven fechas Unix, ISO y códigos numéricos. ¿Dónde centralizas su transformación antes de que razone el agente?",
+    options: ["En un hook PostToolUse", "En un mensaje del usuario", "En cada respuesta final", "En custom_id"],
+    correctIndex: 0,
+    explanation: "PostToolUse permite normalizar resultados de forma centralizada y determinista antes de incorporarlos al razonamiento.",
+  },
+  {
+    id: "q-tool-description-limits",
+    domain: "tools",
+    scenario: "Diseño de herramientas",
+    prompt: "¿Qué elemento hace que una descripción de tool reduzca confusiones frente a una alternativa similar?",
+    options: ["Cuándo usarla y cuándo no, con formatos y ejemplos de entrada", "Una descripción de una palabra", "Un nombre genérico como analyze", "Ocultar las limitaciones"],
+    correctIndex: 0,
+    explanation: "Las descripciones útiles distinguen propósito, entradas, salidas, casos límite y fronteras con alternativas.",
+  },
+  {
+    id: "q-error-category",
+    domain: "tools",
+    scenario: "Herramienta MCP",
+    prompt: "Una tool rechaza una operación porque viola una política de negocio. ¿Cómo debe marcarse el error?",
+    options: ["Como error de negocio no reintentable, con explicación", "Como timeout reintentable", "Como resultado vacío exitoso", "Como error sin categoría"],
+    correctIndex: 0,
+    explanation: "Una violación de política no mejora con un retry automático; la categoría y el motivo guían al agente hacia una alternativa o escalamiento.",
+  },
+  {
+    id: "q-tool-choice-specific",
+    domain: "tools",
+    scenario: "Flujo de extracción",
+    prompt: "Debes obligar que el primer paso sea extract_metadata antes del enriquecimiento. ¿Qué configuración es adecuada?",
+    options: ["tool_choice con type: tool y name: extract_metadata", "tool_choice: auto", "Eliminar la tool", "Solo usar un prompt vago"],
+    correctIndex: 0,
+    explanation: "La selección forzada por nombre asegura esa operación específica cuando el orden del flujo lo exige.",
+  },
+  {
+    id: "q-user-vs-project-command",
+    domain: "code",
+    scenario: "Comando de revisión",
+    prompt: "Un comando /review debe estar disponible para todo el equipo al clonar el repositorio. ¿Dónde lo colocas?",
+    options: ["En .claude/commands o .claude/skills dentro del proyecto", "En ~/.claude/commands del autor", "En un mensaje de chat", "En el archivo de lock"],
+    correctIndex: 0,
+    explanation: "Los comandos de proyecto se versionan y se comparten. Los directorios del usuario son personales.",
+  },
+  {
+    id: "q-argument-hint",
+    domain: "code",
+    scenario: "Skill de análisis",
+    prompt: "¿Qué campo del frontmatter de una skill ayuda a solicitar una ruta cuando se invoca sin argumentos?",
+    options: ["argument-hint", "stop_reason", "custom_id", "max_tokens"],
+    correctIndex: 0,
+    explanation: "argument-hint orienta a la persona para proporcionar el parámetro que la skill necesita.",
+  },
+  {
+    id: "q-rules-vs-directory",
+    domain: "code",
+    scenario: "Convenciones",
+    prompt: "¿Cuándo conviene un CLAUDE.md dentro de un directorio en vez de una regla con paths globales?",
+    options: ["Cuando la convención está ligada solo a esa zona del árbol de código", "Cuando aplica a tests dispersos", "Cuando debe cargarse para todo archivo", "Cuando contiene secretos"],
+    correctIndex: 0,
+    explanation: "Las reglas con paths sirven para patrones repartidos; un CLAUDE.md local expresa convenciones propias de un directorio concreto.",
+  },
+  {
+    id: "q-ci-independent-review",
+    domain: "code",
+    scenario: "Integración continua",
+    prompt: "Para evitar que un mismo contexto valide sin contraste el código que acaba de generar, ¿qué arquitectura de CI es preferible?",
+    options: ["Instancias independientes para generar y revisar", "Una única sesión que se califique a sí misma", "Desactivar los tests", "Usar solo output de texto libre"],
+    correctIndex: 0,
+    explanation: "Separar generación y revisión introduce una evaluación más independiente y permite contratos de salida distintos.",
+  },
+  {
+    id: "q-explicit-criteria",
+    domain: "prompts",
+    scenario: "Revisión de pull request",
+    prompt: "¿Qué criterio reduce mejor falsos positivos de comentarios de código?",
+    options: ["Reportar solo discrepancias que cambien comportamiento, seguridad o corrección y omitir estilo menor", "Pedir ser más cuidadoso", "Reportar todos los cambios", "No pedir evidencia"],
+    correctIndex: 0,
+    explanation: "Los criterios explícitos y categorías excluidas son más operables que instrucciones vagas como “sé conservador”.",
+  },
+  {
+    id: "q-required-invention",
+    domain: "prompts",
+    scenario: "Extracción documental",
+    prompt: "¿Qué riesgo existe si marcas como required un dato que algunos documentos no contienen?",
+    options: ["El modelo puede verse forzado a inventar un valor", "El JSON deja de ser válido siempre", "La API olvida el system prompt", "La herramienta deja de recibir inputs"],
+    correctIndex: 0,
+    explanation: "Un campo obligatorio solo debe usarse cuando la evidencia estará disponible; de lo contrario conviene nullable u opcional.",
+  },
+  {
+    id: "q-self-correction",
+    domain: "prompts",
+    scenario: "Validación financiera",
+    prompt: "¿Qué patrón facilita detectar una suma equivocada que el modelo afirmó como correcta?",
+    options: ["Comparar valor declarado y valor calculado, y tratar el conflicto", "Pedir una respuesta más larga", "Desactivar el esquema JSON", "Ocultar los importes"],
+    correctIndex: 0,
+    explanation: "La autocorrección parte de una discrepancia explícita entre un valor afirmado y uno verificado por el sistema.",
+  },
+  {
+    id: "q-batch-partial-failure",
+    domain: "prompts",
+    scenario: "Message Batches",
+    prompt: "Un lote devuelve resultados exitosos y errores por elemento. ¿Cuál es el manejo correcto?",
+    options: ["Reconciliar por custom_id y procesar o reintentar solo los elementos fallidos", "Descartar todos los éxitos", "Asumir que el lote entero falló", "Reordenar manualmente sin IDs"],
+    correctIndex: 0,
+    explanation: "Los lotes pueden tener estado mixto. custom_id permite identificar exactamente qué entrada necesita recuperación.",
+  },
+  {
+    id: "q-position-aware-context",
+    domain: "context",
+    scenario: "Documento largo",
+    prompt: "¿Qué estrategia minimiza el efecto lost-in-the-middle para una instrucción crítica?",
+    options: ["Colocarla al inicio o al final y mantenerla visible", "Enterrarla entre resultados extensos", "Repetir datos irrelevantes", "Eliminar el prompt de sistema"],
+    correctIndex: 0,
+    explanation: "La posición influye en la atención; la información importante se conserva mejor en los extremos de una entrada larga.",
+  },
+  {
+    id: "q-escalation-trigger",
+    domain: "context",
+    scenario: "Soporte al cliente",
+    prompt: "¿Cuál es un disparador más fiable para escalar a una persona?",
+    options: ["Una política no cubierta o una solicitud explícita del usuario", "Un sentimiento levemente negativo detectado", "Cualquier mensaje corto", "Que una tool devuelva datos correctos"],
+    correctIndex: 0,
+    explanation: "Los disparadores confiables se basan en riesgo, política y voluntad explícita; el sentimiento aislado es demasiado ambiguo.",
   },
 ];
 
