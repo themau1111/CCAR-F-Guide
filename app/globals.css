@@ -117,3 +117,67 @@ body { background: radial-gradient(circle at top left, #eeeaff 0, transparent 33
 @media (max-width: 720px) {
   .workspace { padding-top: 0; }.site-header { position: sticky; top: 0; z-index: 20; }.content-area { padding-top: 26px; }.sidebar-progress { display: none; }.coverage-map-compact { margin: 14px 0 4px; }.review-section { margin-top: 38px; padding-top: 32px; }.game-picker { grid-template-columns: repeat(5, minmax(73px, 1fr)); padding-bottom: 10px; }.game-picker button { min-width: 73px; min-height: 62px; }.game-picker button em { display: none; }.practice-stage .game-card { padding: 19px; }.flashcard { height: 316px; }.flashcard-side { padding: 22px; }.flashcard strong { font-size: 22px; }.match-board { gap: 8px; }.match-button { min-height: 60px; font-size: 10px; }.connection-lines { display: none; }.drag-list li { grid-template-columns: 15px 23px 1fr; }.drag-list .move-controls { grid-column: 3; }.question-round h3, .binary-game h3, .fill-game h3 { font-size: 21px; }.fill-options { grid-template-columns: 1fr; }.memory-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }.memory-board button { min-height: 100px; }.question-nav { max-height: 170px; overflow-y: auto; }.exam-workspace { gap: 13px; }
 }
+
+/* Contrast pass: retain the palette while making the learning flow easier to scan. */
+.site-header { border-bottom-color: #cfc7eb; box-shadow: 0 5px 18px rgba(40, 29, 88, .06); }
+.top-nav { background: #e5e0fb; }
+.top-nav button { color: #4b4572; }
+.top-nav button.active { color: #32237f; box-shadow: 0 4px 13px rgba(67, 45, 155, .2); }
+
+.section-heading { position: relative; overflow: hidden; padding: 24px 26px; border: 1px solid #4f3aa4; border-radius: 18px; background: linear-gradient(128deg, #29214f 0%, #503794 58%, #9a3d94 100%); box-shadow: 0 18px 34px rgba(47, 32, 106, .2); }
+.section-heading::after { content: ""; position: absolute; top: -84px; right: -50px; width: 224px; height: 224px; border: 32px solid rgba(255,255,255,.09); border-radius: 50%; pointer-events: none; }
+.section-heading > div, .section-heading > .section-count, .section-heading > .domain-pill, .section-heading > .exam-badge { position: relative; z-index: 1; }
+.section-heading h2 { color: #fff; }
+.section-heading > div > p:not(.eyebrow) { max-width: 675px; color: #e7e1ff; }
+.section-heading .eyebrow { color: #ffe589; }
+.section-heading .section-count, .section-heading .domain-pill, .section-heading .exam-badge { color: #302455; border: 0; background: #fff0ad; box-shadow: 0 5px 13px rgba(24, 17, 67, .19); }
+
+.study-card { border: 1.5px solid #cfc8ee; box-shadow: 0 13px 28px rgba(54, 43, 111, .1); }
+.study-card::after { border-color: #aaa0e4; }
+.study-card:hover { transform: translateY(-4px); border-color: #7867d6; box-shadow: 0 20px 37px rgba(54, 43, 111, .18); }
+.study-card h3 { color: #2d2852; }
+.exam-tip { border-left: 4px solid #e85b8e; background: #eeeafd; }
+.mastered-label { border: 1px solid #9fd8ce; }
+
+.review-section { border-top-color: #b9afe5; }
+.practice-heading { border-color: #a34294; background: linear-gradient(128deg, #2a2151 0%, #5b327f 58%, #b14291 100%); }
+.practice-heading .eyebrow { color: #ffdf88; }
+.game-picker { padding: 7px; border: 1px solid #d5cdef; border-radius: 15px; background: linear-gradient(135deg, #f1edff, #fff); box-shadow: 0 10px 24px rgba(55, 43, 113, .06); }
+.game-picker button { border-color: #ccc4ed; background: rgba(255,255,255,.9); }
+.game-picker button:hover { color: #4937a9; border-color: #8272d9; background: #f0edff; }
+.game-picker button.recommended { border-color: #b6a9ec; background: linear-gradient(145deg, #f8f5ff, #e8e1ff); }
+.game-picker button.active { border-color: #4d36c5; box-shadow: 0 9px 17px rgba(70, 45, 180, .32); }
+.practice-stage .game-card { border: 1.5px solid #cfc8ee; box-shadow: 0 17px 32px rgba(54, 43, 111, .12); }
+
+.setup-section .section-heading { border-color: #bf4a75; background: linear-gradient(128deg, #27204d 0%, #583382 54%, #c05277 100%); }
+.exam-setup-grid .setup-panel, .question-card, .domain-result { border-width: 1.5px; box-shadow: 0 12px 27px rgba(54, 43, 111, .08); }
+.segmented-control { border: 1px solid #d1c9ee; }
+.segmented-control button.active { color: #fff; background: #5f46ca; box-shadow: 0 4px 10px rgba(64, 44, 163, .25); }
+
+@media (min-width: 721px) {
+  .workspace { column-gap: 0; }
+  .domain-sidebar { align-self: stretch; min-height: calc(100vh - 94px); margin-bottom: 0; padding: 29px 21px; border: 0; border-radius: 0 0 18px 18px; background: linear-gradient(160deg, #27204d 0%, #372669 58%, #4c2c76 100%); box-shadow: 12px 0 28px rgba(45, 31, 103, .13); }
+  .sidebar-heading .eyebrow { color: #cfc5ff; }
+  .sidebar-heading h2 { color: #fff; }
+  .domain-link { color: #dad5f5; }
+  .domain-link:hover { color: #fff; background: rgba(255,255,255,.1); }
+  .domain-link.active { color: #332654; background: linear-gradient(105deg, #ffe69a, #ffc580); box-shadow: 0 6px 14px rgba(11, 7, 40, .2); }
+  .domain-link.active .domain-number, .domain-link.active .domain-name small { color: #514267; }
+  .domain-number { color: #b8afe2; }
+  .domain-name small { color: #bbb4dc; }
+  .mini-progress { background: rgba(255,255,255,.19); }
+  .mini-progress i { background: linear-gradient(90deg, #f9db7f, #ff9a91); }
+  .sidebar-progress { border-color: rgba(255,255,255,.17); background: rgba(255,255,255,.09); }
+  .sidebar-progress span, .sidebar-progress p { color: #d5cff2; }
+  .sidebar-progress strong { color: #ffe38c; }
+  .sidebar-progress .progress-track { background: rgba(255,255,255,.18); }
+  .sidebar-progress .progress-track span { background: linear-gradient(90deg, #ffd973, #ff9a9a); }
+  .coverage-map-compact { border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.08); }
+  .coverage-map-compact summary > span:first-child { color: #82e0d0; }
+  .coverage-map-compact summary strong, .compact-coverage-body li strong { color: #fff; }
+  .coverage-map-compact summary small, .coverage-map-compact summary b, .compact-coverage-body { color: #d7d1ef; }
+  .compact-coverage-body li { border-bottom-color: rgba(255,255,255,.12); }
+  .compact-coverage-body li span { color: #ffe18d; }
+  .compact-warning { color: #fff0c5; border-left-color: #ffd56e; background: rgba(133, 80, 25, .34); }
+  .sidebar-card { color: #3c2b50; border: 1px solid rgba(255,222,139,.52); box-shadow: none; }
+}
